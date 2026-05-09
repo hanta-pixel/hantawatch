@@ -112,13 +112,13 @@ const adminStats = [
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="border-b border-zinc-800 bg-zinc-950 sticky top-0 z-50 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-black tracking-tight">HantaWatch</h1>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">HantaWatch</h1>
             <p className="text-zinc-400 text-sm">Canlı Hantavirüs Takip Platformu</p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button className="bg-red-600 hover:bg-red-500 transition px-5 py-2 rounded-2xl font-semibold">
               Bildirimleri Aç
             </button>
@@ -130,10 +130,10 @@ const adminStats = [
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <section className="mb-10">
+        <section className="mb-10 px-2 sm:px-0">
           <div className="bg-gradient-to-br from-red-700 to-red-900 rounded-[32px] p-10 shadow-2xl border border-red-500/20">
             <div className="max-w-3xl">
-              <h2 className="text-6xl font-black leading-tight mb-5">
+              <h2 className="text-3xl sm:text-6xl font-black leading-tight mb-5">
                 Dünya Genelinde Canlı Hantavirüs Takibi
               </h2>
 
@@ -328,7 +328,7 @@ const adminStats = [
           <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
             <h2 className="text-2xl font-bold">SEO İçerik Merkezi</h2>
 
-            <button className="bg-red-600 hover:bg-red-500 transition px-5 py-2 rounded-2xl font-semibold">
+            <button className="w-full sm:w-auto bg-red-600 hover:bg-red-500 transition px-5 py-2 rounded-2xl font-semibold">
               Blog Yazısı Oluştur
             </button>
           </div>
@@ -357,7 +357,7 @@ const adminStats = [
           </div>
         </section>
 
-        <section className="bg-gradient-to-r from-red-700 to-red-900 rounded-[32px] p-10 border border-red-500/20">
+        <section className="bg-gradient-to-r from-red-700 to-red-900 rounded-[32px] p-5 sm:p-10 border border-red-500/20">
           <div className="max-w-3xl">
             <h2 className="text-4xl font-black mb-4">
               Günlük Vaka Bildirimlerine Katıl
