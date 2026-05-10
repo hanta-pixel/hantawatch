@@ -1,48 +1,54 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import { ChartsPanel } from '@/components/dashboard/charts-panel';
 import { CountriesTable } from '@/components/dashboard/countries-table';
 import { Hero } from '@/components/dashboard/hero';
 import { LiveWorldMap } from '@/components/dashboard/live-world-map';
 import { NewsPanel } from '@/components/dashboard/news-panel';
 import { ProductsPanel } from '@/components/dashboard/products-panel';
+import { RiskPanel } from '@/components/dashboard/risk-panel';
 import { Stats } from '@/components/dashboard/stats';
-import type { CountryItem, NewsItem, ProductItem, StatItem } from '@/lib/types/dashboard';
-
-const stats: StatItem[] = [
-  { label: 'Doğrulanmış Vaka', value: '5', trend: '+2% son 24 saat' },
-  { label: 'Şüpheli Vaka', value: '8' },
-  { label: 'Ölüm', value: '3' },
-  { label: 'Pandemi Riski', value: 'Düşük' },
-];
-
-const countries: CountryItem[] = [
-  { country: 'Arjantin', cases: 3, deaths: 2, status: 'İzleniyor' },
-  { country: 'Şili', cases: 2, deaths: 1, status: 'Kontrol Altında' },
-  { country: 'Türkiye', cases: 0, deaths: 0, status: 'Resmi Vaka Yok' },
-];
-
-const news: NewsItem[] = [
-  { title: 'DSÖ Hantavirüs Vakalarını İzliyor', source: 'WHO', time: '2 saat önce' },
-  { title: 'Cruise Gemisindeki Vakalar Gündemde', source: 'Reuters', time: '4 saat önce' },
-  { title: 'Türkiye Sağlık Bakanlığından Açıklama', source: 'TR Sağlık', time: '6 saat önce' },
-];
-
-const products: ProductItem[] = [
-  { title: 'N95 Koruyucu Maske', category: 'Koruma', cta: 'İncele' },
-  { title: 'Profesyonel Dezenfektan', category: 'Hijyen', cta: 'İncele' },
-  { title: 'Kamp İlk Yardım Kiti', category: 'Outdoor', cta: 'İncele' },
-  { title: 'HEPA Filtreli Temizlik Seti', category: 'Temizlik', cta: 'İncele' },
-];
+import type { DashboardPayload, StatItem } from '@/lib/types/dashboard';
 
 export default function Page() {
+  const [data, setData] = useState<DashboardPayload | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      const res = await fetch('/api/cases', { cache: 'no-store' });
+      const json = (await res.json()) as DashboardPayload;
+      if (active) setData(json);
+    };
+    load();
+    const timer = setInterval(load, 15000);
+    return () => { active = false; clearInterval(timer); };
+  }, []);
+
+  const stats = useMemo<StatItem[]>(() => {
+    if (!data) return [];
+    return [
+      { label: 'Doğrulanmış Vaka', value: String(data.totals.confirmed), trend: 'Canlı veri akışı' },
+      { label: 'Şüpheli Vaka', value: String(data.totals.suspected) },
+      { label: 'Ölüm', value: String(data.totals.deaths) },
+      { label: 'Son Güncelleme', value: new Date(data.updatedAt).toLocaleTimeString('tr-TR') },
+    ];
+  }, [data]);
+
+  if (!data) return <main className="mx-auto w-full max-w-7xl p-6">Yükleniyor...</main>;
+
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 md:px-6 md:py-8">
       <Hero />
       <Stats items={stats} />
-      <LiveWorldMap countries={countries} />
-      <CountriesTable countries={countries} />
-
+      <LiveWorldMap countries={data.countries} />
+      <RiskPanel countries={data.countries} />
+      <ChartsPanel trend={data.trend} countries={data.countries} />
+      <CountriesTable countries={data.countries} />
       <section className="grid gap-6 lg:grid-cols-2">
-        <NewsPanel items={news} />
-        <ProductsPanel items={products} />
+        <NewsPanel items={data.news} />
+        <ProductsPanel items={data.products} />
       </section>
     </main>
   );
