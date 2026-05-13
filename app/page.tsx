@@ -25,7 +25,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-[1280px] overflow-x-hidden px-4 py-5 md:px-6 md:py-7">
+    <main className="mx-auto w-full max-w-[1240px] overflow-x-hidden px-4 py-4 md:px-5 md:py-5">
       <PremiumNavbar lastUpdated={data ? new Date(data.updatedAt).toLocaleTimeString('tr-TR') : undefined} />
       <Hero />
       <Stats items={stats} />
