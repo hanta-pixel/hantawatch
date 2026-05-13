@@ -1,42 +1,50 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f4f4f5;
-  --foreground: #0f172a;
+  --background: #f3f4f6;
+  --foreground: #0b1220;
   --surface: #ffffff;
   --card-bg: #ffffff;
-  --card-border: #e4e4e7;
-  --muted: #52525b;
+  --card-border: #e5e7eb;
+  --muted: #5b6472;
 }
 
 :root[data-theme='dark'] {
-  --background: #09090b;
-  --foreground: #f4f4f5;
-  --surface: #18181b;
-  --card-bg: #111827;
-  --card-border: #27272a;
-  --muted: #a1a1aa;
+  --background: #06070a;
+  --foreground: #f5f7fb;
+  --surface: #0b0e14;
+  --card-bg: linear-gradient(155deg, rgba(19, 24, 35, 0.92), rgba(8, 10, 16, 0.94));
+  --card-border: rgba(255, 255, 255, 0.12);
+  --muted: #95a0b3;
 }
 
 * {
-  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms ease;
 }
 
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at 50% -20%, rgba(127,29,29,0.25) 0%, rgba(9,9,11,1) 42%), #050507;
+  background:
+    radial-gradient(circle at 18% -10%, rgba(215, 38, 56, 0.12), transparent 35%),
+    radial-gradient(circle at 85% 0%, rgba(70, 88, 140, 0.12), transparent 32%),
+    #06070a;
   color: var(--foreground);
   font-family: Inter, Arial, Helvetica, sans-serif;
 }
 
 .dashboard-enter {
-  animation: page-enter 500ms ease both;
+  animation: page-enter 480ms ease both;
+}
+
+.premium-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(239, 68, 68, 0.32);
 }
 
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
