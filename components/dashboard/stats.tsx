@@ -1,45 +1,36 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import type { StatItem } from '@/lib/types/dashboard';
 
 type StatsProps = { items: StatItem[] };
 
-function AnimatedNumber({ value }: { value: string }) {
-  const target = Number(value);
-  const [current, setCurrent] = useState(Number.isFinite(target) ? 0 : value);
+const iconByLabel: Record<string, string> = {
+  'Doğrulanmış Vaka': '🫀',
+  'Şüpheli Vaka': '🧪',
+  'Ölüm': '☠️',
+  'Pandemi Riski': '🛡️',
+};
 
-  useEffect(() => {
-    if (!Number.isFinite(target)) return;
-    let raf = 0;
-    let start = 0;
-    const duration = 900;
-    const tick = (t: number) => {
-      if (!start) start = t;
-      const p = Math.min((t - start) / duration, 1);
-      setCurrent(Math.floor(target * p));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target]);
-
-  return <>{current}</>;
-}
+const trendTone = (trend?: string) => {
+  if (!trend) return 'text-zinc-400';
+  const lowered = trend.toLowerCase();
+  if (lowered.includes('yüksek')) return 'text-red-400';
+  if (lowered.includes('orta')) return 'text-amber-300';
+  if (lowered.includes('düşük')) return 'text-emerald-300';
+  return 'text-zinc-400';
+};
 
 export function Stats({ items }: StatsProps) {
   return (
     <section className="dashboard-enter mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => (
-        <article
-          key={item.label}
-          className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 backdrop-blur-sm transition hover:border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.30)]"
-        >
-          <p className="text-sm text-[var(--muted)]">{item.label}</p>
-          <p className="mt-1 text-4xl font-black">
-            <AnimatedNumber value={item.value} />
-          </p>
-          {item.trend ? <p className="mt-2 text-xs text-emerald-400">↗ {item.trend}</p> : null}
+        <article key={item.label} className="rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(24,24,27,0.86),rgba(9,9,11,0.86))] p-5 shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg">{iconByLabel[item.label] ?? '•'}</div>
+            <p className="text-sm text-zinc-300">{item.label}</p>
+          </div>
+          <p className="mt-3 text-4xl font-black tracking-tight">{item.value}</p>
+          {item.trend ? <p className={`mt-2 text-sm font-medium ${trendTone(item.trend)}`}>↗ {item.trend}</p> : null}
         </article>
       ))}
     </section>
